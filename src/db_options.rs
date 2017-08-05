@@ -849,7 +849,9 @@ impl DbOptions {
 
 impl Default for DbOptions {
     fn default() -> Self {
-        Self::new()
+        let mut opts = Self::new();
+        opts.create_if_missing(true);
+        opts
     }
 }
 

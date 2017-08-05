@@ -271,13 +271,6 @@ impl<'a> Drop for Snapshot<'a> {
 }
 
 impl Db {
-    /// Open a database with default options.
-    pub fn open_default<P: AsRef<Path>>(path: P) -> Result<Db, Error> {
-        let mut opts = DbOptions::default();
-        opts.create_if_missing(true);
-        Db::open(path, opts)
-    }
-
     /// Open the database with the specified options.
     pub fn open<P: AsRef<Path>>(path: P, opts: DbOptions) -> Result<Db, Error> {
         Db::open_cf(path, &[], opts)
@@ -289,7 +282,7 @@ impl Db {
     ///
     /// # Panics
     ///
-    /// * Panics if the column family doesn't exist.
+    /// * Panics if the column families do not exist.
     pub fn open_cf<P: AsRef<Path>>(path: P,
                                    cfs: &[&str],
                                    mut opts: DbOptions)
@@ -326,7 +319,7 @@ impl Db {
 
             // We need to store the CStrings in an intermediate vector
             // so that their pointers remain valid.
-            let c_cfs: Vec<CString> = cfs_v.iter()
+            let c_cfs: Vec<_> = cfs_v.iter()
                 .map(|cf| CString::new(cf.as_bytes()).unwrap())
                 .collect();
 
